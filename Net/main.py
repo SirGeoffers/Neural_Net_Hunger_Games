@@ -1,5 +1,13 @@
 
+import math
 import random
+
+def sigmoid(value):
+	if value > 100:
+		value = 100
+	elif value < -100:
+		value = -100
+	return 1 / (1 + math.e**(-value))
 
 class Perceptron:
 
@@ -24,7 +32,7 @@ class Perceptron:
 		out = 0
 		for i in range(len(self.prevPerceptrons)):
 			out += self.prevPerceptrons[i].getValue() * self.weights[i]
-		return out
+		return sigmoid(out)
 
 	def calcAndSetValue(self):
 		self.setValue(self.calcValue())
@@ -68,10 +76,22 @@ class NeuralNet:
 			return self.run()
 		return []
 
+	def mutate(self, mutationProbability):
+		for layer in self.layers:
+			for perceptron in layer:
+				for w in range(len(perceptron.weights)):
+					if (random.random() < mutationProbability):
+						perceptron.weights[w] = random.uniform(-1, 1)
+
+
 if __name__ == "__main__":
 
 	print("Testing neural nets\n");
 
 	net = NeuralNet([2, 1])
 	output = net.runWithInput([1, 0.5])
-	print(output)
+	print("Output:", output)
+
+	net.mutate(1)
+	output = net.run()
+	print("Mutated Output", output)
