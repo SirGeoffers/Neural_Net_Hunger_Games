@@ -1,6 +1,7 @@
 from tkinter import *
-import math
-import time
+
+from model import SimModel
+from view import SimView
 
 root = Tk()
 root.title("Neural Net Hunger Games")
@@ -10,23 +11,18 @@ root.geometry("1280x720")
 canvas = Canvas(root, width=1280, height=720, background="black")
 canvas.pack()
 
-def drawShip(x, y, rotation):
-	canvas.create_oval(x - 5, y - 5, x + 5, y + 5, outline="white")
-	canvas.create_line(x, y, x + 10 * math.cos(rotation), y + 10 * math.sin(rotation), fill="white")
+model = SimModel()
+view = SimView(canvas, model)
 
-sx = 100
-sy = 100
-sr = 1
+for i in range(10):
+	ship = model.addShip()
+	ship.setTurn(1)
+	ship.setThrottle(1)
+
 def tick():
-	global sx
-	global sy
-	global sr
-	sr -= 0.01
-	sx += 5 * math.cos(sr)
-	sy += 5 * math.sin(sr)
-	canvas.delete("all")
-	drawShip(sx, sy, sr)
-	root.after(10, tick)
+	model.frame()
+	view.frame()
+	root.after(20, tick) # 50 fps
 
 root.after(1, tick)
 root.mainloop()
