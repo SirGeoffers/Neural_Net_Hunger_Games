@@ -2,6 +2,8 @@ import math
 import threading
 from tkinter import *
 
+from shipController import HumanShipController
+
 class Pen:
 	def __init__(self, canvas):
 		self.canvas = canvas
@@ -25,15 +27,21 @@ class Pen:
 			y1,
 			x2,
 			y2,
-			fill="0x00ff00")
+			fill="white")
 
 class WindowManager:
-	def __init__(self, model):
+	def __init__(self, model, controller):
 		self.model = model
 		self.root = Tk()
 		self.root.title("Neural Net Hunger Games")
 		self.root.resizable(width=FALSE, height=FALSE)
 		self.root.geometry("1280x720")
+		self.root.bind("<Up>", lambda event: controller.setForward(True))
+		self.root.bind("<KeyRelease-Up>", lambda event: controller.setForward(False))
+		self.root.bind("<Left>", lambda event: controller.setLeft(True))
+		self.root.bind("<KeyRelease-Left>", lambda event: controller.setLeft(False))
+		self.root.bind("<Right>", lambda event: controller.setRight(True))
+		self.root.bind("<KeyRelease-Right>", lambda event: controller.setRight(False))
 		self.canvas = Canvas(self.root, width=1280, height=720, background="black")
 		self.canvas.pack()
 		self.pen = Pen(self.canvas)
@@ -48,30 +56,23 @@ class WindowManager:
 		self.pen.drawLine(
 			ship.x,
 			ship.y,
-			ship.x + 4 * math.cos(ship.rotation + 4 * math.pi / 3),
-			ship.y + 4 * math.sin(ship.rotation + 4 * math.pi / 3))
+			ship.x + 8 * math.cos(ship.rotation + 4 * math.pi / 3),
+			ship.y + 8 * math.sin(ship.rotation + 4 * math.pi / 3))
 		self.pen.drawLine(
 			ship.x,
 			ship.y,
-			ship.x + 4 * math.cos(ship.rotation - 4 * math.pi / 3),
-			ship.y + 4 * math.sin(ship.rotation - 4 * math.pi / 3))
+			ship.x + 8 * math.cos(ship.rotation - 4 * math.pi / 3),
+			ship.y + 8 * math.sin(ship.rotation - 4 * math.pi / 3))
 		self.pen.drawLine(
-			ship.x + 6 * math.cos(ship.rotation),
-			ship.y + 6 * math.sin(ship.rotation),
-			ship.x + 4 * math.cos(ship.rotation + 4 * math.pi / 3),
-			ship.y + 4 * math.sin(ship.rotation + 4 * math.pi / 3))
+			ship.x + 12 * math.cos(ship.rotation),
+			ship.y + 12 * math.sin(ship.rotation),
+			ship.x + 8 * math.cos(ship.rotation + 4 * math.pi / 3),
+			ship.y + 8 * math.sin(ship.rotation + 4 * math.pi / 3))
 		self.pen.drawLine(
-			ship.x + 6 * math.cos(ship.rotation),
-			ship.y + 6 * math.sin(ship.rotation),
-			ship.x + 4 * math.cos(ship.rotation - 4 * math.pi / 3),
-			ship.y + 4 * math.sin(ship.rotation - 4 * math.pi / 3))
-		
-		#self.pen.drawCircle(ship.x, ship.y, 5)
-		#self.pen.drawLine(
-		#	ship.x,
-		#	ship.y,
-		#	ship.x + 10 * math.cos(ship.rotation),
-		#	ship.y + 10 * math.sin(ship.rotation))
+			ship.x + 12 * math.cos(ship.rotation),
+			ship.y + 12 * math.sin(ship.rotation),
+			ship.x + 8 * math.cos(ship.rotation - 4 * math.pi / 3),
+			ship.y + 8 * math.sin(ship.rotation - 4 * math.pi / 3))
 
 class SimView(threading.Thread):
 	def __init__(self, model):
@@ -79,9 +80,12 @@ class SimView(threading.Thread):
 		self.daemon = True
 		self.model = model
 		self.isAlive = True
+		self.controller = HumanShipController()
 		self.start()
 	def run(self):
-		wm = WindowManager(self.model)
+		wm = WindowManager(self.model, self.controller)
 		self.isAlive = False
 	def alive(self):
 		return self.isAlive
+	def getController(self):
+		return self.controller

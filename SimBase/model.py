@@ -1,8 +1,7 @@
 import math
-import random
 
-MAX_THRUST = 0.2
-MAX_TURN = 0.2
+MAX_THRUST = 0.05
+MAX_TURN = 0.1
 
 def clip(min, x, max):
 	if x < min:
@@ -44,7 +43,7 @@ class SimModel:
 	def __init__(self):
 		self.ships = []
 	def addShip(self):
-		newShip = Ship(rotation = random.uniform(0, 2 * math.pi))
+		newShip = Ship()
 		self.ships.append(newShip)
 		return newShip
 	def frame(self):

@@ -5,10 +5,8 @@ import time
 model = SimModel()
 view = SimView(model)
 
-for i in range(10):
-	ship = model.addShip()
-	ship.setTurn(0.1)
-	ship.setThrottle(0.01)
+ship = model.addShip()
+view.getController().setShip(ship)
 
 while view.alive():
 	time.sleep(0.01)
