@@ -1,6 +1,8 @@
 import math
+import threading
+from tkinter import *
 
-class SimDrawer:
+class Pen:
 	def __init__(self, canvas):
 		self.canvas = canvas
 	def clear(self):
@@ -25,14 +27,23 @@ class SimDrawer:
 			y2,
 			fill="white")
 
-class SimView:
-	def __init__(self, canvas, model):
+class WindowManager:
+	def __init__(self, model):
 		self.model = model
-		self.pen = SimDrawer(canvas)
+		self.root = Tk()
+		self.root.title("Neural Net Hunger Games")
+		self.root.resizable(width=FALSE, height=FALSE)
+		self.root.geometry("1280x720")
+		self.canvas = Canvas(self.root, width=1280, height=720, background="black")
+		self.canvas.pack()
+		self.pen = Pen(self.canvas)
+		self.root.after(1, self.frame)
+		self.root.mainloop()
 	def frame(self):
 		self.pen.clear()
 		for ship in self.model.ships:
 			self.drawShip(ship)
+		self.root.after(17, self.frame) # ~60 fps
 	def drawShip(self, ship):
 		self.pen.drawCircle(ship.x, ship.y, 5)
 		self.pen.drawLine(
@@ -40,4 +51,16 @@ class SimView:
 			ship.y,
 			ship.x + 10 * math.cos(ship.rotation),
 			ship.y + 10 * math.sin(ship.rotation))
-		
+
+class SimView(threading.Thread):
+	def __init__(self, model):
+		threading.Thread.__init__(self)
+		self.daemon = True
+		self.model = model
+		self.isAlive = True
+		self.start()
+	def run(self):
+		wm = WindowManager(self.model)
+		self.isAlive = False
+	def alive(self):
+		return self.isAlive
