@@ -25,7 +25,7 @@ class Pen:
 			y1,
 			x2,
 			y2,
-			fill="white")
+			fill="0x00ff00")
 
 class WindowManager:
 	def __init__(self, model):
@@ -45,12 +45,33 @@ class WindowManager:
 			self.drawShip(ship)
 		self.root.after(17, self.frame) # ~60 fps
 	def drawShip(self, ship):
-		self.pen.drawCircle(ship.x, ship.y, 5)
 		self.pen.drawLine(
 			ship.x,
 			ship.y,
-			ship.x + 10 * math.cos(ship.rotation),
-			ship.y + 10 * math.sin(ship.rotation))
+			ship.x + 4 * math.cos(ship.rotation + 4 * math.pi / 3),
+			ship.y + 4 * math.sin(ship.rotation + 4 * math.pi / 3))
+		self.pen.drawLine(
+			ship.x,
+			ship.y,
+			ship.x + 4 * math.cos(ship.rotation - 4 * math.pi / 3),
+			ship.y + 4 * math.sin(ship.rotation - 4 * math.pi / 3))
+		self.pen.drawLine(
+			ship.x + 6 * math.cos(ship.rotation),
+			ship.y + 6 * math.sin(ship.rotation),
+			ship.x + 4 * math.cos(ship.rotation + 4 * math.pi / 3),
+			ship.y + 4 * math.sin(ship.rotation + 4 * math.pi / 3))
+		self.pen.drawLine(
+			ship.x + 6 * math.cos(ship.rotation),
+			ship.y + 6 * math.sin(ship.rotation),
+			ship.x + 4 * math.cos(ship.rotation - 4 * math.pi / 3),
+			ship.y + 4 * math.sin(ship.rotation - 4 * math.pi / 3))
+		
+		#self.pen.drawCircle(ship.x, ship.y, 5)
+		#self.pen.drawLine(
+		#	ship.x,
+		#	ship.y,
+		#	ship.x + 10 * math.cos(ship.rotation),
+		#	ship.y + 10 * math.sin(ship.rotation))
 
 class SimView(threading.Thread):
 	def __init__(self, model):
