@@ -19,6 +19,9 @@ class Perceptron:
 			weightValue = random.uniform(-1, 1)
 			self.weights.append(weightValue)
 
+	def getWeight(self, index):
+		return self.weights[index]
+
 	def setWeight(self, index, value):
 		self.weights[index] = value
 
@@ -83,15 +86,43 @@ class NeuralNet:
 					if (random.random() < mutationProbability):
 						perceptron.weights[w] = random.uniform(-1, 1)
 
+	def clone(self):
+		layerSizes = []
+		for layer in self.layers:
+			layerSizes.append(len(layer))
+		newNet = NeuralNet(layerSizes)
+		for layerIndex in range(len(self.layers)):
+			oldLayer = self.layers[layerIndex]
+			newLayer = newNet.layers[layerIndex]
+			for perceptronIndex in range(len(oldLayer)):
+				oldPerceptron = oldLayer[perceptronIndex]
+				newPerceptron = newLayer[perceptronIndex]
+				for weightIndex in range(len(oldPerceptron.weights)):
+					oldWeight = oldPerceptron.getWeight(weightIndex)
+					newPerceptron.setWeight(weightIndex, oldWeight)
+		return newNet
+
 
 if __name__ == "__main__":
 
-	print("Testing neural nets\n");
+	print("Testing neural nets");
 
-	net = NeuralNet([2, 1])
-	output = net.runWithInput([1, 0.5])
-	print("Output:", output)
+	net1 = NeuralNet([2, 1])
+	output = net1.runWithInput([1, 0.5])
+	print("Net 1:", id(net1), output)
 
-	net.mutate(1)
-	output = net.run()
-	print("Mutated Output", output)
+	net2 = NeuralNet([2, 1])
+	output = net2.runWithInput([1, 0.5])
+	print("Net 2:", id(net2), output)
+
+	print("Mutating Net 2")
+	net2.mutate(1)
+
+	output = net2.runWithInput([1, 0.5])
+	print("Net 2:", id(net2), output)
+
+	print("Cloning Net 2 to Net 3")
+	clonedNet = net2.clone()
+
+	output = clonedNet.runWithInput([1, 0.5])
+	print("Net 3:", id(clonedNet), output)
