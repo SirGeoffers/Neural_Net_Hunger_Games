@@ -46,6 +46,8 @@ class SimModel:
 		newShip = Ship()
 		self.ships.append(newShip)
 		return newShip
+	def removeShip(self, ship):
+		self.ships.remove(ship)
 	def frame(self):
 		for ship in self.ships:
 			ship.frame()

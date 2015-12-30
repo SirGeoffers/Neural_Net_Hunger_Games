@@ -27,9 +27,9 @@ class HumanShipController:
 	def updateTurn(self):
 		turn = 0
 		if self.left:
-			turn -= 1
-		if self.right:
 			turn += 1
+		if self.right:
+			turn -= 1
 		self.controller.setTurn(turn)
 	def setLeft(self, left):
 		self.left = left

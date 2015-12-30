@@ -2,7 +2,7 @@ import math
 import threading
 from tkinter import *
 
-from shipController import HumanShipController
+from .shipController import HumanShipController
 
 class Pen:
 	def __init__(self, canvas):
@@ -10,7 +10,7 @@ class Pen:
 	def clear(self):
 		self.canvas.delete("all")
 	def transformPoint(self, x, y):
-		return x + 640, y + 360;
+		return x + 640, -y + 360;
 	def drawCircle(self, x, y, radius):
 		x, y = self.transformPoint(x, y)
 		self.canvas.create_oval(
