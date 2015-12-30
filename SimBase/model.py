@@ -1,6 +1,6 @@
 import math
 
-MAX_THRUST = 0.05
+MAX_THRUST = 0.15
 MAX_TURN = 0.1
 
 def clip(min, x, max):
@@ -26,18 +26,12 @@ class Ship:
 		self.turn = clip(-1, turn, 1)
 	def setThrottle(self, throttle):
 		self.throttle = clip(0, throttle, 1)
-	def applyTurn(self):
+	def frame(self):
 		self.rotation += MAX_TURN * self.turn
-	def applyThrust(self):
 		self.vx += MAX_THRUST * self.throttle * math.cos(self.rotation)
 		self.vy += MAX_THRUST * self.throttle * math.sin(self.rotation)
-	def applyVelocity(self):
 		self.x += self.vx
 		self.y += self.vy
-	def frame(self):
-		self.applyTurn()
-		self.applyThrust()
-		self.applyVelocity()
 
 class SimModel:
 	def __init__(self):
