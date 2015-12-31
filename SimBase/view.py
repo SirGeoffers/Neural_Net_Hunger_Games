@@ -47,7 +47,7 @@ class WindowManager:
 			self.root.bind("<KeyRelease-Right>", lambda event: rightFcn(False))
 	def executeFrameEvent(self):
 		self.frameEvent()
-		self.root.after(17, self.executeFrameEvent)
+		self.root.after(16, self.executeFrameEvent)
 	def mainloop(self, frameEvent):
 		self.frameEvent = frameEvent
 		self.root.bind("<q>", lambda event: self.root.destroy())

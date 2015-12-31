@@ -1,6 +1,7 @@
 class ShipController:
 	def __init__(self, ship=None):
-		self.ship = ship
+		if ship != None:
+			self.setShip(ship)
 	def setShip(self, ship):
 		self.ship = ship
 	def setThrottle(self, throttle):
