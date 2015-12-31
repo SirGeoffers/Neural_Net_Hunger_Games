@@ -1,4 +1,5 @@
 import math
+import time
 from tkinter import *
 
 from .shipController import HumanShipController
@@ -32,6 +33,8 @@ class WindowManager:
 			x2,
 			y2,
 			fill="white")
+	def drawFrameRate(self):
+		self.canvas.create_text(20, 20, text="fps: " + str(round(self.fps)), fill="white", anchor=W)
 	def bindArrowKeys(self, upFcn = None, downFcn = None, leftFcn = None, rightFcn = None):
 		if upFcn != None:
 			self.root.bind("<Up>", lambda event: upFcn(True))
@@ -47,10 +50,25 @@ class WindowManager:
 			self.root.bind("<KeyRelease-Right>", lambda event: rightFcn(False))
 	def executeFrameEvent(self):
 		self.frameEvent()
-		self.root.after(16, self.executeFrameEvent)
+		self.processFrameRate()
+		self.root.after(10, self.executeFrameEvent)
+	def processFrameRate(self):
+		self.frameCount += 1
+		if self.frameCount >= 30:
+			newTime = time.time()
+			deltaTime = newTime - self.lastTime
+			self.lastTime = newTime
+			if deltaTime > 0:
+				self.fps = self.frameCount / deltaTime
+			else:
+				self.fps = 0
+			self.frameCount = 0
 	def mainloop(self, frameEvent):
 		self.frameEvent = frameEvent
 		self.root.bind("<q>", lambda event: self.root.destroy())
+		self.frameCount = 0
+		self.lastTime = time.time()
+		self.fps = 0
 		self.root.after(1, self.executeFrameEvent)
 		self.root.mainloop()
 
@@ -60,6 +78,7 @@ class SimView(WindowManager):
 		self.model = model
 	def frame(self):
 		self.clear()
+		self.drawFrameRate()
 		for ship in self.model.ships:
 			self.drawShip(ship)
 	def drawShip(self, ship):
