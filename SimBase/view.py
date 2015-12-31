@@ -48,6 +48,10 @@ class WindowManager:
 		if rightFcn != None:
 			self.root.bind("<Right>", lambda event: rightFcn(True))
 			self.root.bind("<KeyRelease-Right>", lambda event: rightFcn(False))
+	def bindSpaceKey(self, fcn = None):
+		if fcn != None:
+			self.root.bind("<space>", lambda event: fcn(True))
+			self.root.bind("<KeyRelease-space>", lambda event: fcn(False))
 	def executeFrameEvent(self):
 		self.frameEvent()
 		self.processFrameRate()

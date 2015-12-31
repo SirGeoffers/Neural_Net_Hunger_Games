@@ -3,13 +3,21 @@ from .view import SimView
 
 class SimBase:
 	def run(self):
+		self.speedup = 1
 		self.model = SimModel()
 		self.view = SimView(self.model)
+		self.view.bindSpaceKey(self.setFastMode)
 		self.setup()
 		self.view.mainloop(self.simFrame)
+	def setFastMode(self, fastMode):
+		if fastMode:
+			self.speedup = 10
+		else:
+			self.speedup = 1
 	def simFrame(self):
 		self.controlFrame()
-		self.model.frame()
+		for i in range(self.speedup):
+			self.model.frame()
 		self.view.frame()
 	def setup(self):
 		# called during setup
